@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اداة software tool | أداة التفليش وفحص النظام الاحترافية</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Cairo', 'Inter', 'sans-serif'],
+                        en: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brandGreen: {
+                            DEFAULT: '#166534',
+                            hover: '#14532D',
+                            light: '#DCFCE7',
+                            accent: '#22C55E',
+                        },
+                        appDark: {
+                            sidebar: '#21262D',
+                            main: '#282E36',
+                            card: '#2F3640',
+                            border: '#3B434E',
+                            activeTab: '#2E4C5E',
+                            activeText: '#4FC3F7',
+                        }
+                    },
+                    boxShadow: {
+                        'mac': '0 25px 60px -15px rgba(0, 0, 0, 0.35), 0 0 1px 1px rgba(0, 0, 0, 0.12)',
+                        'btn-green': '0 10px 25px -5px rgba(22, 101, 52, 0.35), 0 4px 10px -2px rgba(22, 101, 52, 0.2)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FFFFFF;
+            color: #111827;
+            font-family: 'Cairo', 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        @keyframes androidIdleFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+
+        @keyframes hammerIdleWiggle {
+            0%, 100% { transform: rotate(-12deg); }
+            50% { transform: rotate(-4deg); }
+        }
+
+        .idle-float {
+            animation: androidIdleFloat 3.2s ease-in-out infinite;
+        }
+
+        .idle-hammer {
+            transform-origin: 36px 76px;
+            animation: hammerIdleWiggle 3.2s ease-in-out infinite;
+        }
+
+        @keyframes hammerStrikeAction {
+            0% { transform: rotate(-12deg); }
+            35% { transform: rotate(45deg); }
+            65% { transform: rotate(-68deg); }
+            80% { transform: rotate(-52deg); }
+            100% { transform: rotate(-12deg); }
+        }
+
+        .hammer-striking {
+            transform-origin: 36px 76px !important;
+            animation: hammerStrikeAction 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+        }
+
+        @keyframes buttonSmashEffect {
+            0% { transform: scale(1, 1) translateY(0); }
+            25% { transform: scale(1.06, 0.84) translateY(6px); }
+            50% { transform: scale(0.97, 1.03) translateY(-2px); }
+            75% { transform: scale(1.02, 0.99) translateY(1px); }
+            100% { transform: scale(1, 1) translateY(0); }
+        }
+
+        .btn-smashed {
+            animation: buttonSmashEffect 0.48s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes shockwaveExpand {
+            0% {
+                transform: translate(-50%, -50%) scale(0.2);
+                opacity: 0.95;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(2.4);
+                opacity: 0;
+            }
+        }
+
+        .shockwave-ring {
+            position: fixed;
+            width: 70px;
+            height: 70px;
+            border-radius: 9999px;
+            border: 3px solid #22C55E;
+            background: radial-gradient(circle, rgba(34,197,94,0.35) 0%, rgba(22,101,52,0) 70%);
+            pointer-events: none;
+            z-index: 9998;
+            animation: shockwaveExpand 0.55s ease-out forwards;
+        }
+
+        .impact-spark {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            border-radius: 9999px;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease-out;
+        }
+
+        #mascot-mover {
+            transition: transform 0.45s cubic-bezier(0.34, 1.35, 0.64, 1);
+            will-change: transform;
+            z-index: 50;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-900 antialiased selection:bg-green-100 selection:text-green-900">
+
+    <header class="w-full border-b border-gray-100 bg-white/90 backdrop-blur-md sticky top-0 z-30">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-brandGreen animate-pulse"></span>
+                <span class="font-bold text-gray-900 text-base tracking-tight">اداة <span class="font-en text-brandGreen">software tool</span></span>
+            </div>
+            <div class="flex items-center gap-3 text-xs sm:text-sm text-gray-500">
+                <span class="hidden sm:inline-flex items-center gap-1.5 bg-gray-50 border border-gray-200/80 px-3 py-1 rounded-full font-medium text-gray-700">
+                    <svg class="w-3.5 h-3.5 text-gray-600" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.96 6.32c.67-.81 1.12-1.94 1-3.07-.96.04-2.13.64-2.82 1.45-.61.7-.115 1.85-1.01 2.96 1.07.08 2.16-.53 2.83-1.34"/>
+                    </svg>
+                    متوافق مع macOS
+                </span>
+                <span class="bg-green-50 text-brandGreen border border-green-200 px-3 py-1 rounded-full font-en font-semibold text-xs">
+                    v3.5 Pro
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 pt-10 pb-20 flex flex-col items-center text-center">
+        
+        <div id="mascot-home-anchor" class="relative w-36 h-36 flex items-center justify-center mb-3 select-none">
+            <div class="absolute inset-3 rounded-full bg-green-50/80 border border-green-100/80 -z-10"></div>
+            
+            <div id="mascot-mover" class="relative cursor-pointer" title="اضغط على أي زر تحميل وشاهد المطرقة!">
+                <svg id="android-mascot-svg" class="w-32 h-32 idle-float drop-shadow-md overflow-visible" viewBox="0 0 160 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="androidBodyGrad" x1="50" y1="25" x2="115" y2="130" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#3DDC84"/>
+                            <stop offset="100%" stop-color="#1E8E3E"/>
+                        </linearGradient>
+                        <linearGradient id="hammerHeadGrad" x1="0" y1="0" x2="40" y2="25" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#4B5563"/>
+                            <stop offset="50%" stop-color="#1F2937"/>
+                            <stop offset="100%" stop-color="#111827"/>
+                        </linearGradient>
+                        <linearGradient id="hammerHandleGrad" x1="0" y1="0" x2="10" y2="50" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#D97706"/>
+                            <stop offset="100%" stop-color="#92400E"/>
+                        </linearGradient>
+                    </defs>
+
+                    <line x1="64" y1="30" x2="54" y2="15" stroke="#2BB669" stroke-width="4" stroke-linecap="round"/>
+                    <line x1="96" y1="30" x2="106" y2="15" stroke="#2BB669" stroke-width="4" stroke-linecap="round"/>
+
+                    <path d="M50 56C50 38.3269 63.4315 24 80 24C96.5685 24 110 38.3269 110 56H50Z" fill="url(#androidBodyGrad)"/>
+                    
+                    <circle cx="67" cy="41" r="3.8" fill="#FFFFFF"/>
+                    <circle cx="93" cy="41" r="3.8" fill="#FFFFFF"/>
+                    <circle cx="68" cy="40" r="1.2" fill="#166534"/>
+                    <circle cx="94" cy="40" r="1.2" fill="#166534"/>
+
+                    <path d="M50 60H110V104C110 109.523 105.523 114 100 114H60C54.4772 114 50 109.523 50 104V60Z" fill="url(#androidBodyGrad)"/>
+
+                    <rect x="63" y="112" width="12" height="22" rx="6" fill="#22A85A"/>
+                    <rect x="85" y="112" width="12" height="22" rx="6" fill="#22A85A"/>
+
+                    <rect x="114" y="61" width="12" height="36" rx="6" fill="#28B463"/>
+
+                    <g id="hammer-arm-group" class="idle-hammer">
+                        <rect x="28" y="34" width="7.5" height="54" rx="3.5" fill="url(#hammerHandleGrad)" stroke="#78350F" stroke-width="1"/>
+                        <rect x="14" y="22" width="36" height="17" rx="4" fill="url(#hammerHeadGrad)" stroke="#374151" stroke-width="1.2"/>
+                        <rect x="17" y="24.5" width="30" height="3" rx="1.5" fill="#9CA3AF" opacity="0.55"/>
+                        <rect x="11" y="24" width="4" height="13" rx="1.5" fill="#6B7280"/>
+                        <rect x="49" y="24" width="4" height="13" rx="1.5" fill="#6B7280"/>
+
+                        <rect x="34" y="61" width="12" height="34" rx="6" fill="#28B463" transform="rotate(14 36 76)"/>
+                        <circle cx="32" cy="75" r="6.5" fill="#3DDC84" stroke="#166534" stroke-width="1.5"/>
+                    </g>
+                </svg>
+            </div>
+        </div>
+
+        <div class="max-w-2xl mx-auto mb-8">
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight mb-3">
+                اداة <span class="font-en text-brandGreen">software tool</span>
+            </h1>
+            <p class="text-base sm:text-lg text-gray-600 font-medium leading-relaxed">
+                الحل الاحترافي المتكامل لتفليش أنظمة الأندرويد، فحص العتاد العميق، وإدارة <span class="font-en text-gray-800 font-semibold">Firmware &amp; ADB</span> بكل سلاسة وأمان على نظام <span class="font-en text-gray-800 font-semibold">macOS</span>.
+            </p>
+        </div>
+
+        <div class="w-full max-w-sm mx-auto flex flex-col items-center gap-3.5 mb-14 relative z-20">
+            
+            <button
+                id="btn-download-intel"
+                type="button"
+                onclick="triggerHammerDownload('intel', this)"
+                class="group w-full py-4 px-6 rounded-2xl bg-[#166534] hover:bg-[#14532D] active:bg-[#0F3F22] text-white font-bold text-lg shadow-btn-green transition-all duration-200 flex items-center justify-center gap-3 cursor-pointer border border-[#15803D]/40 focus:outline-none focus:ring-4 focus:ring-green-600/25"
+            >
+                <span class="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V3" />
+                    </svg>
+                </span>
+                <span class="tracking-wide">تنزيل التطبيق <span class="font-en font-bold">intel</span></span>
+            </button>
+
+            <button
+                id="btn-download-silicon"
+                type="button"
+                onclick="triggerHammerDownload('silicon', this)"
+                class="group w-full py-3.5 px-6 rounded-2xl bg-[#1B4332] hover:bg-[#143728] text-white font-bold text-base sm:text-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-3 cursor-pointer border border-[#2D6A4F]/50 focus:outline-none focus:ring-4 focus:ring-green-700/20"
+            >
+                <span class="w-8 h-8 rounded-xl bg-white/12 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <svg class="w-5 h-5 text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <rect x="6" y="6" width="12" height="12" rx="2.5" />
+                        <path stroke-linecap="round" d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3" />
+                    </svg>
+                </span>
+                <span>تنزيل التطبيق لـ<span class="font-en font-bold">Apple silicon</span></span>
+            </button>
+
+            <div id="download-status-box" class="hidden w-full mt-2 bg-green-50 border border-green-200 text-green-900 rounded-xl px-4 py-3 text-sm font-medium flex flex-col gap-1.5 shadow-sm transition-all duration-300 text-right">
+                <div class="flex items-center justify-between w-full">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-green-600 animate-ping shrink-0"></span>
+                        <span id="download-status-text" class="font-bold">جاري تنزيل الملف...</span>
+                    </div>
+                    <span id="download-arch-badge" class="font-en text-xs font-bold bg-green-700 text-white px-2.5 py-0.5 rounded-md shrink-0">DMG</span>
+                </div>
+                <div id="download-file-hint" class="text-xs text-green-800/80 font-en dir-ltr text-left truncate"></div>
+            </div>
+        </div>
+
+        <section aria-label="معاينة واجهة التطبيق" class="w-full max-w-5xl mx-auto">
+            <div class="flex items-center justify-center gap-2 mb-3 text-xs text-gray-400 font-medium">
+                <span>معاينة حية لواجهة البرنامج على نظام macOS</span>
+            </div>
+
+            <div class="w-full rounded-2xl overflow-hidden shadow-mac border border-gray-300/80 bg-[#282E36] text-right select-none" dir="rtl">
+                
+                <div class="h-9 bg-[#1E2228] border-b border-[#343B46] px-4 flex items-center justify-between">
+                    <div class="flex items-center gap-2" dir="ltr">
+                        <span class="w-3 h-3 rounded-full bg-[#FF5F56] border border-[#E0443E]"></span>
+                        <span class="w-3 h-3 rounded-full bg-[#FFBD2E] border border-[#DEA123]"></span>
+                        <span class="w-3 h-3 rounded-full bg-[#27C93F] border border-[#1AAB29]"></span>
+                    </div>
+                    <div class="text-[11px] font-en text-gray-400 font-medium tracking-wide">
+                        Softwere Tool — Firmware &amp; Flashing
+                    </div>
+                    <div class="w-12"></div>
+                </div>
+
+                <div class="flex flex-col md:flex-row min-h-[540px]">
+                    
+                    <aside class="w-full md:w-64 bg-[#21262D] border-b md:border-b-0 md:border-l border-[#343B46] p-4 flex flex-col justify-between shrink-0">
+                        <div>
+                            <div class="flex items-center gap-3 pb-4 mb-4 border-b border-[#343B46]">
+                                <div class="w-10 h-10 rounded-xl bg-[#28323E] flex items-center justify-center text-[#38BDF8] shrink-0">
+                                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M19 8h-1.81c-.45-.78-1.07-1.45-1.82-1.96l.93-.93a.996.996 0 10-1.41-1.41l-1.47 1.47C12.96 5.06 12.49 5 12 5s-.96.06-1.41.17L9.11 3.7a.996.996 0 10-1.41 1.41l.92.93C7.88 6.55 7.26 7.22 6.81 8H5c-.55 0-1 .45-1 1s.45 1 1 1h1.09c-.05.33-.09.66-.09 1v1H5c-.55 0-1 .45-1 1s.45 1 1 1h1v1c0 .34.04.67.09 1H5c-.55 0-1 .45-1 1s.45 1 1 1h1.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H19c.55 0 1-.45 1-1s-.45-1-1-1h-1.09c.05-.33.09-.66.09-1v-1h1c.55 0 1-.45 1-1s-.45-1-1-1h-1v-1c0-.34-.04-.67-.09-1H19c.55 0 1-.45 1-1s-.45-1-1-1zm-6 8h-2v-2h2v2zm0-4h-2v-2h2v2z"/>
+                                    </svg>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-en font-bold text-white text-sm leading-tight">Softwere Tool</div>
+                                    <div class="font-en text-[11px] text-gray-400">Firmware &amp; Flashing</div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2 px-2 py-1.5 mb-3 text-xs font-bold text-[#EF4444]">
+                                <span class="w-2.5 h-2.5 rounded-full bg-[#EF4444]"></span>
+                                <span>لا يوجد جهاز متصل</span>
+                            </div>
+
+                            <nav class="space-y-1.5 text-xs sm:text-sm">
+                                <div class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-[#2D4A5B] text-[#4FC3F7] font-bold shadow-sm">
+                                    <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                                    </svg>
+                                    <div class="text-right leading-snug">
+                                        <div>فحص النظام</div>
+                                        <div class="font-en text-[11px] opacity-90">(System Check)</div>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-gray-500/70 font-medium">
+                                    <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                    </svg>
+                                    <span>تثبيت / فلاش <span class="font-en">Firmware</span></span>
+                                </div>
+
+                                <div class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-gray-500/70 font-medium">
+                                    <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span>إضافة <span class="font-en">Firmware</span> (استيراد)</span>
+                                </div>
+
+                                <div class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-gray-500/70 font-medium">
+                                    <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                    <span>حذف <span class="font-en">Firmware</span></span>
+                                </div>
+
+                                <div class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-gray-500/70 font-medium">
+                                    <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                    <span>استيراد للسطح المكتب</span>
+                                </div>
+
+                                <div class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-gray-200 hover:bg-white/5 transition-colors font-semibold cursor-pointer">
+                                    <svg class="w-4 h-4 shrink-0 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+                                    </svg>
+                                    <span>تصحيح الأخطاء اللاسلكي</span>
+                                </div>
+                            </nav>
+                        </div>
+
+                        <div class="pt-6 mt-6 border-t border-[#343B46]/60 text-right space-y-1">
+                            <div class="text-[11px] text-gray-400">
+                                الإصدار: <span class="font-en text-gray-300">3.5 Pro (Embedded ADB)</span>
+                            </div>
+                            <div class="text-[11px] text-[#38BDF8] font-medium">
+                                حالة الجهاز: لا يوجد هاتف متصل
+                            </div>
+                        </div>
+                    </aside>
+
+                    <div class="flex-1 bg-[#282E36] flex flex-col">
+                        
+                        <div class="px-5 py-3.5 border-b border-[#343B46] flex flex-wrap items-center justify-between gap-3">
+                            <div class="flex items-center gap-3">
+                                <div class="flex items-center gap-1.5 text-[#EF4444]">
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <rect x="2" y="3" width="20" height="14" rx="2" />
+                                        <path d="M8 21h8M12 17v4" />
+                                    </svg>
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <rect x="7" y="2" width="10" height="20" rx="2" />
+                                        <line x1="3" y1="3" x2="21" y2="21" />
+                                    </svg>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-xs sm:text-sm font-bold text-[#EF4444]">
+                                        لا يوجد اي هاتف متصل في الكمبيوتر
+                                    </div>
+                                    <div class="text-[11px] text-gray-400">
+                                        يرجى توصيل الهاتف عبر USB أو تفعيل تصحيح الأخطاء اللاسلكي
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="px-3 py-1 rounded-lg bg-[#3B262B] border border-[#EF4444]/30 text-[#EF4444] text-xs font-bold flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-[#EF4444]"></span>
+                                <span>غير متصل</span>
+                            </div>
+                        </div>
+
+                        <div class="p-5 sm:p-6 space-y-6 flex-1">
+                            <h2 class="text-lg sm:text-xl font-extrabold text-white text-right">
+                                تقرير فحص النظام وحالة الأجهزة الموصلة
+                            </h2>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+                                <div class="bg-[#2F3640] border border-[#EF4444]/35 rounded-xl p-4 text-right flex flex-col justify-between min-h-[104px] hover:border-[#EF4444]/60 transition-colors">
+                                    <div class="text-[#EF4444] mb-2">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="text-[11px] text-gray-400 mb-0.5">حالة النظام / الهاتف</div>
+                                        <div class="text-sm font-bold text-white">لا يوجد هاتف متصل</div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-[#2F3640] border border-[#F59E0B]/35 rounded-xl p-4 text-right flex flex-col justify-between min-h-[104px] hover:border-[#F59E0B]/60 transition-colors">
+                                    <div class="text-[#F59E0B] mb-2">
+                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="text-[11px] text-gray-400 mb-0.5">حالة الواي فاي</div>
+                                        <div class="text-sm font-bold text-white">غير متوفر</div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-[#2F3640] border border-[#EF4444]/35 rounded-xl p-4 text-right flex flex-col justify-between min-h-[104px] hover:border-[#EF4444]/60 transition-colors">
+                                    <div class="text-[#EF4444] mb-2">
+                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="text-[11px] text-gray-400 mb-0.5">حالة البلوتوث</div>
+                                        <div class="text-sm font-bold text-white">غير متوفر</div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-[#2F3640] border border-[#3E4754] rounded-xl p-4 text-right flex flex-col justify-between min-h-[104px] hover:border-gray-500 transition-colors">
+                                    <div class="h-5 mb-2"></div>
+                                    <div>
+                                        <div class="text-[11px] text-gray-400 mb-0.5">حرارة المعالج <span class="font-en">(CPU)</span></div>
+                                        <div class="text-sm font-bold text-white">غير متوفر</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-[#2F3640] border border-[#3B434E] rounded-xl p-5 text-right">
+                                <div class="text-sm sm:text-base font-bold text-[#38BDF8] pb-3.5 mb-4 border-b border-[#3E4754]">
+                                    تفاصيل الفحص العميق <span class="font-en">(System Diagnostics)</span>
+                                </div>
+
+                                <div class="space-y-3.5 text-xs sm:text-sm">
+                                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-1 sm:gap-4 items-center">
+                                        <span class="sm:col-span-4 text-gray-400">اسم الجهاز والطراز:</span>
+                                        <span class="sm:col-span-8 font-bold text-white">غير متصل</span>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-1 sm:gap-4 items-center">
+                                        <span class="sm:col-span-4 text-gray-400">رقم التسلسلي <span class="font-en">(Serial)</span>:</span>
+                                        <span class="sm:col-span-8 font-bold text-white">غير متوفر</span>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-1 sm:gap-4 items-center">
+                                        <span class="sm:col-span-4 text-gray-400">حالة البوتلودر <span class="font-en">(Bootloader)</span>:</span>
+                                        <span class="sm:col-span-8 font-bold text-white">غير متصل (لا يوجد جهاز)</span>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-1 sm:gap-4 items-center">
+                                        <span class="sm:col-span-4 text-gray-400">فحص هارد بريك <span class="font-en">(Hard Brick)</span>:</span>
+                                        <span class="sm:col-span-8 font-bold text-white">لا يوجد جهاز متصل للفحص</span>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-1 sm:gap-4 items-center">
+                                        <span class="sm:col-span-4 text-gray-400">كفاءة البطارية:</span>
+                                        <span class="sm:col-span-8 font-bold text-white">غير متوفر</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-gray-100 bg-gray-50/60 py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-gray-500">
+            <div class="font-semibold text-gray-700">
+                اداة <span class="font-en text-brandGreen">software tool</span> — جميع الحقوق محفوظة &copy; 2026
+            </div>
+            <div class="flex flex-wrap items-center justify-center gap-4 text-xs text-gray-500">
+                <span class="font-en">macOS Intel (x86_64)</span>
+                <span>•</span>
+                <span class="font-en">Apple Silicon (M1/M2/M3/M4)</span>
+                <span>•</span>
+                <button
+                    type="button"
+                    onclick="toggleDevModal(true)"
+                    class="inline-flex items-center gap-1.5 text-gray-500 hover:text-brandGreen font-semibold bg-white border border-gray-200 hover:border-green-300 px-3 py-1 rounded-full transition-colors cursor-pointer shadow-2xs"
+                >
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span>إعدادات ربط الملفات (للمطور)</span>
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- نافذة إعدادات المطور لربط الملفات من جهازه أو GitHub Releases -->
+    <div id="dev-settings-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-xs p-4">
+        <div class="bg-white border border-gray-200 rounded-2xl max-w-xl w-full p-6 shadow-2xl text-right space-y-5 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3.5">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-brandGreen"></span>
+                    <h3 class="text-lg font-extrabold text-gray-900">ربط ملفات التثبيت من جهازك أو GitHub</h3>
+                </div>
+                <button type="button" onclick="toggleDevModal(false)" class="text-gray-400 hover:text-gray-700 p-1 rounded-lg cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="bg-amber-50 border border-amber-200/80 rounded-xl p-3.5 text-xs text-amber-900 leading-relaxed space-y-1.5">
+                <div class="font-bold text-amber-950">كيف تجعل أي زائر يحمّل الملفات مباشرة من جهازك؟</div>
+                <p>
+                    لأسباب أمنية في المتصفحات، لا يمكن لموقع منشور على الإنترنت الوصول لمجلدات جهازك الشخصية مباشرة إلا إذا رفعت الملفين على استضافة مجانية مثل <strong>GitHub Releases</strong> أو وضعتهما في نفس مجلد الموقع على السيرفر.
+                </p>
+                <p>
+                    <strong>1. للاختبار الفوري الآن:</strong> اختر الملفين من جهازك بالأسفل وسينزلهما المتصفح فوراً عند الضغط على الأزرار.<br>
+                    <strong>2. للنشر للزوار:</strong> ارفع الملفين على <span class="font-en font-semibold">GitHub Releases</span> والصق رابطيهما المباشرين في الحقول أدناه أو داخل متغير <span class="font-en font-semibold">APP_DOWNLOAD_CONFIG</span> أعلى الكود.
+                </p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- إعداد نسخة Intel -->
+                <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/70 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-sm text-gray-900">نسخة معالجات Intel</span>
+                        <span class="font-en text-xs font-semibold bg-green-100 text-brandGreen px-2.5 py-0.5 rounded-md">Softwere tool.intel.dmg</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-600 mb-1">رابط التحميل المباشر (GitHub Releases أو رابط السيرفر):</label>
+                        <input id="input-intel-url" type="text" dir="ltr" placeholder="./Softwere tool.intel.dmg أو https://github.com/.../Softwere.tool.intel.dmg" class="w-full text-xs font-en px-3 py-2 rounded-lg border border-gray-300 bg-white focus:outline-none focus:border-brandGreen">
+                    </div>
+                    <div class="flex items-center justify-between pt-1">
+                        <label class="inline-flex items-center gap-2 text-xs font-semibold text-brandGreen hover:text-brandGreen-hover cursor-pointer bg-white border border-green-200 px-3 py-1.5 rounded-lg">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                            </svg>
+                            <span>اختيار الملف من جهازي الآن</span>
+                            <input type="file" accept=".dmg,.zip,.pkg" class="hidden" onchange="handleLocalFileAttach('intel', this)">
+                        </label>
+                        <span id="local-intel-status" class="text-[11px] text-gray-500 font-en">غير محدد محلياً</span>
+                    </div>
+                </div>
+
+                <!-- إعداد نسخة Apple Silicon -->
+                <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/70 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-sm text-gray-900">نسخة معالجات Apple Silicon</span>
+                        <span class="font-en text-xs font-semibold bg-emerald-100 text-emerald-900 px-2.5 py-0.5 rounded-md">Softwere tool.apple.silicon</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-600 mb-1">رابط التحميل المباشر (GitHub Releases أو رابط السيرفر):</label>
+                        <input id="input-silicon-url" type="text" dir="ltr" placeholder="./Softwere tool.apple.silicon أو https://github.com/.../Softwere.tool.apple.silicon" class="w-full text-xs font-en px-3 py-2 rounded-lg border border-gray-300 bg-white focus:outline-none focus:border-brandGreen">
+                    </div>
+                    <div class="flex items-center justify-between pt-1">
+                        <label class="inline-flex items-center gap-2 text-xs font-semibold text-brandGreen hover:text-brandGreen-hover cursor-pointer bg-white border border-green-200 px-3 py-1.5 rounded-lg">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                            </svg>
+                            <span>اختيار الملف من جهازي الآن</span>
+                            <input type="file" class="hidden" onchange="handleLocalFileAttach('silicon', this)">
+                        </label>
+                        <span id="local-silicon-status" class="text-[11px] text-gray-500 font-en">غير محدد محلياً</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-2.5 pt-2 border-t border-gray-100">
+                <button type="button" onclick="resetDownloadConfig()" class="px-4 py-2 rounded-xl text-xs font-semibold text-gray-600 hover:bg-gray-100 cursor-pointer">
+                    استعادة الافتراضي
+                </button>
+                <button type="button" onclick="saveDownloadConfig()" class="px-5 py-2 rounded-xl text-xs font-bold bg-brandGreen hover:bg-brandGreen-hover text-white shadow-sm cursor-pointer">
+                    حفظ الإعدادات
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* =====================================================================
+           إعدادات روابط التحميل المباشرة (للمطور):
+           استبدل الروابط أدناه بروابط GitHub Releases المباشرة أو مسارات السيرفر
+           ===================================================================== */
+        const DEFAULT_DOWNLOAD_CONFIG = {
+            intel: {
+                fileName: 'Softwere tool.intel.dmg',
+                directUrl: './Softwere tool.intel.dmg',
+                localBlobUrl: null
+            },
+            silicon: {
+                fileName: 'Softwere tool.apple.silicon',
+                directUrl: './Softwere tool.apple.silicon',
+                localBlobUrl: null
+            }
+        };
+
+        let APP_DOWNLOAD_CONFIG = JSON.parse(JSON.stringify(DEFAULT_DOWNLOAD_CONFIG));
+
+        try {
+            const savedUrls = JSON.parse(localStorage.getItem('software_tool_download_urls') || '{}');
+            if (savedUrls.intelUrl) APP_DOWNLOAD_CONFIG.intel.directUrl = savedUrls.intelUrl;
+            if (savedUrls.siliconUrl) APP_DOWNLOAD_CONFIG.silicon.directUrl = savedUrls.siliconUrl;
+        } catch (e) {}
+
+        let isHammerAnimating = false;
+
+        function toggleDevModal(show) {
+            const modal = document.getElementById('dev-settings-modal');
+            if (show) {
+                document.getElementById('input-intel-url').value = APP_DOWNLOAD_CONFIG.intel.directUrl;
+                document.getElementById('input-silicon-url').value = APP_DOWNLOAD_CONFIG.silicon.directUrl;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            } else {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function handleLocalFileAttach(arch, inputEl) {
+            const file = inputEl.files && inputEl.files[0];
+            if (!file) return;
+
+            if (APP_DOWNLOAD_CONFIG[arch].localBlobUrl) {
+                URL.revokeObjectURL(APP_DOWNLOAD_CONFIG[arch].localBlobUrl);
+            }
+
+            const blobUrl = URL.createObjectURL(file);
+            APP_DOWNLOAD_CONFIG[arch].localBlobUrl = blobUrl;
+
+            const statusLabel = document.getElementById(`local-${arch}-status`);
+            statusLabel.textContent = `تم الربط: ${file.name}`;
+            statusLabel.classList.remove('text-gray-500');
+            statusLabel.classList.add('text-brandGreen', 'font-semibold');
+        }
+
+        function saveDownloadConfig() {
+            const intelVal = document.getElementById('input-intel-url').value.trim();
+            const siliconVal = document.getElementById('input-silicon-url').value.trim();
+
+            if (intelVal) APP_DOWNLOAD_CONFIG.intel.directUrl = intelVal;
+            if (siliconVal) APP_DOWNLOAD_CONFIG.silicon.directUrl = siliconVal;
+
+            try {
+                localStorage.setItem('software_tool_download_urls', JSON.stringify({
+                    intelUrl: APP_DOWNLOAD_CONFIG.intel.directUrl,
+                    siliconUrl: APP_DOWNLOAD_CONFIG.silicon.directUrl
+                }));
+            } catch (e) {}
+
+            toggleDevModal(false);
+        }
+
+        function resetDownloadConfig() {
+            APP_DOWNLOAD_CONFIG.intel.directUrl = DEFAULT_DOWNLOAD_CONFIG.intel.directUrl;
+            APP_DOWNLOAD_CONFIG.silicon.directUrl = DEFAULT_DOWNLOAD_CONFIG.silicon.directUrl;
+            document.getElementById('input-intel-url').value = APP_DOWNLOAD_CONFIG.intel.directUrl;
+            document.getElementById('input-silicon-url').value = APP_DOWNLOAD_CONFIG.silicon.directUrl;
+            try {
+                localStorage.removeItem('software_tool_download_urls');
+            } catch (e) {}
+        }
+
+        function executeFileDownload(archType) {
+            const target = APP_DOWNLOAD_CONFIG[archType];
+            if (!target) return;
+
+            const link = document.createElement('a');
+            link.download = target.fileName;
+            link.style.display = 'none';
+
+            if (target.localBlobUrl) {
+                link.href = target.localBlobUrl;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                return;
+            }
+
+            const url = target.directUrl;
+            const isExternalHttp = /^https?:\/\//i.test(url);
+            const isHttpProtocol = /^https?:$/i.test(window.location.protocol);
+
+            if (isExternalHttp) {
+                link.href = url;
+                link.rel = 'noopener noreferrer';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                return;
+            }
+
+            if (isHttpProtocol) {
+                fetch(url, { method: 'HEAD' })
+                    .then((res) => {
+                        if (res.ok) {
+                            link.href = url;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                        } else {
+                            triggerFallbackInstallerBlob(target.fileName, archType);
+                        }
+                    })
+                    .catch(() => {
+                        triggerFallbackInstallerBlob(target.fileName, archType);
+                    });
+            } else {
+                triggerFallbackInstallerBlob(target.fileName, archType);
+            }
+        }
+
+        function triggerFallbackInstallerBlob(fileName, archType) {
+            const archLabel = archType === 'intel' ? 'macOS Intel (x86_64)' : 'macOS Apple Silicon (ARM64 M1-M4)';
+            const payload = [
+                'Softwere Tool v3.5 Pro - Official Installer Package',
+                `Architecture: ${archLabel}`,
+                `Target Package: ${fileName}`,
+                '----------------------------------------------------',
+                'ملاحظة للمطور: لاستبدال هذا الملف بحزمة التطبيق الفعلية،',
+                'ارفع الحزمة على GitHub Releases أو ضعها بجانب ملف index.html'
+            ].join('\n');
+
+            const blob = new Blob([payload], { type: 'application/x-apple-diskimage' });
+            const tempUrl = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = tempUrl;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(tempUrl), 4000);
+        }
+
+        function playHammerImpactSound() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                
+                const ctx = new AudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(190, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(48, ctx.currentTime + 0.16);
+
+                gain.gain.setValueAtTime(0.32, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start();
+                osc.stop(ctx.currentTime + 0.19);
+            } catch (e) {}
+        }
+
+        function spawnImpactParticles(x, y) {
+            const ring = document.createElement('div');
+            ring.className = 'shockwave-ring';
+            ring.style.left = `${x}px`;
+            ring.style.top = `${y}px`;
+            document.body.appendChild(ring);
+            setTimeout(() => ring.remove(), 600);
+
+            const colors = ['#22C55E', '#166534', '#FACC15', '#4ADE80', '#15803D'];
+            const sparkCount = 12;
+
+            for (let i = 0; i < sparkCount; i++) {
+                const spark = document.createElement('div');
+                spark.className = 'impact-spark';
+                spark.style.backgroundColor = colors[i % colors.length];
+                spark.style.left = `${x}px`;
+                spark.style.top = `${y}px`;
+                document.body.appendChild(spark);
+
+                const angle = (Math.PI * 2 * i) / sparkCount + (Math.random() * 0.4 - 0.2);
+                const distance = 45 + Math.random() * 45;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance - 15;
+
+                requestAnimationFrame(() => {
+                    spark.style.transform = `translate(${tx}px, ${ty}px) scale(0.2)`;
+                    spark.style.opacity = '0';
+                });
+
+                setTimeout(() => spark.remove(), 550);
+            }
+        }
+
+        function triggerHammerDownload(archType, buttonElement) {
+            if (isHammerAnimating) return;
+            isHammerAnimating = true;
+
+            const mascotMover = document.getElementById('mascot-mover');
+            const mascotSvg = document.getElementById('android-mascot-svg');
+            const hammerGroup = document.getElementById('hammer-arm-group');
+            const statusBox = document.getElementById('download-status-box');
+            const statusText = document.getElementById('download-status-text');
+            const archBadge = document.getElementById('download-arch-badge');
+            const fileHint = document.getElementById('download-file-hint');
+
+            const mascotRect = mascotMover.getBoundingClientRect();
+            const btnRect = buttonElement.getBoundingClientRect();
+
+            const targetCenterX = btnRect.left + (btnRect.width * 0.62);
+            const targetTopY = btnRect.top - (mascotRect.height * 0.58);
+
+            const currentCenterX = mascotRect.left + (mascotRect.width / 2);
+            const currentTopY = mascotRect.top;
+
+            const deltaX = targetCenterX - currentCenterX;
+            const deltaY = targetTopY - currentTopY;
+
+            mascotSvg.classList.remove('idle-float');
+            mascotMover.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(1.06)`;
+
+            setTimeout(() => {
+                hammerGroup.classList.remove('idle-hammer');
+                void hammerGroup.offsetWidth;
+                hammerGroup.classList.add('hammer-striking');
+            }, 160);
+
+            setTimeout(() => {
+                playHammerImpactSound();
+
+                buttonElement.classList.remove('btn-smashed');
+                void buttonElement.offsetWidth;
+                buttonElement.classList.add('btn-smashed');
+
+                const updatedBtnRect = buttonElement.getBoundingClientRect();
+                const hitX = updatedBtnRect.left + (updatedBtnRect.width * 0.45);
+                const hitY = updatedBtnRect.top + 8;
+                spawnImpactParticles(hitX, hitY);
+
+                const targetInfo = APP_DOWNLOAD_CONFIG[archType];
+                statusBox.classList.remove('hidden');
+                if (archType === 'intel') {
+                    statusText.textContent = 'بدأ تنزيل نسخة معالجات Intel';
+                    archBadge.textContent = 'Intel';
+                } else {
+                    statusText.textContent = 'بدأ تنزيل نسخة معالجات Apple Silicon';
+                    archBadge.textContent = 'Apple Silicon';
+                }
+                fileHint.textContent = `File: ${targetInfo.fileName}`;
+
+                executeFileDownload(archType);
+            }, 470);
+
+            setTimeout(() => {
+                mascotMover.style.transform = 'translate(0px, 0px) scale(1)';
+                hammerGroup.classList.remove('hammer-striking');
+                hammerGroup.classList.add('idle-hammer');
+            }, 880);
+
+            setTimeout(() => {
+                mascotSvg.classList.add('idle-float');
+                buttonElement.classList.remove('btn-smashed');
+                isHammerAnimating = false;
+            }, 1350);
+        }
+
+        document.getElementById('mascot-mover').addEventListener('click', () => {
+            const intelBtn = document.getElementById('btn-download-intel');
+            triggerHammerDownload('intel', intelBtn);
+        });
+    </script>
+</body>
+</html>
